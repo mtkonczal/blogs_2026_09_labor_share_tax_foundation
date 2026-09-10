@@ -1,0 +1,6 @@
+# Raw data pulls (BEA NIPA register files, WID extract) -- large, regenerable
+# by R/01_download_nipa.R and R/08_top1_comparison.R. Derived CSVs in
+# data/derived/ are small and tracked.
+data/raw/
+
+.DS_Store

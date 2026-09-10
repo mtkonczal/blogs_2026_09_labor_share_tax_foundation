@@ -1,0 +1,42 @@
+What is inside the Tax Foundation income universe
+BEA NIPA, vintage 2026-09-09 | latest quarter 2026Q2 
+
+Composition of their net-income denominator ($23.78 trillion SAAR):
+ component                                 pct_of_TF_net_income labor_share
+ Corporate business                        57.936                74.2      
+ General government                        10.602               100.0      
+ Nonprofit institutions serving households  5.836               100.0      
+ Households (domestic employees)            0.115               100.0      
+ Other private (noncorporate)              25.512                34.4      
+    of which proprietors' income            9.078                  NA      
+    of which rental income of persons       4.826                  NA      
+    of which noncorporate compensation      8.781                  NA      
+    of which other noncorporate capital     2.827                  NA      
+
+Share of the denominator whose labor/capital split is set by accounting
+convention rather than an observed transaction (government + nonprofits +
+households at a labor share of 1, rental income of persons at 0,
+proprietors' income unsplit): 30.5% 
+Imputed rental of owner-occupied housing, gross output, share of GDI: 8.1% 
+
+Universe size comparison:
+ universe                                         pct_of_net_domestic_product
+ TF net income (whole domestic economy)           87.7                       
+ Business sector (ex government and nonprofits)   73.2                       
+ Corporate business, net value added              59.7                       
+ Nonfinancial corporate business, net value added 52.1                       
+
+
+Universe weights and sector labor shares over time (percent):
+ year nq w_corp w_govnp w_oth l_corp l_oth conv_pct oo_hous_gdi
+ 1948 4  51.7   12.2    36.1  83.2   35.7  34.2       NA       
+ 1960 4  54.1   16.2    29.7  86.0   36.3  32.6     5.75       
+ 1970 4  56.8   19.5    23.7  86.1   34.3  31.6     5.74       
+ 1980 4  60.6   17.7    21.7  85.7   31.4  26.6     6.34       
+ 1986 4  59.8   17.7    22.5  84.3   27.9  25.7     6.78       
+ 1990 4  58.5   18.8    22.7  85.7   26.8  27.3     7.04       
+ 2000 4  58.8   17.3    23.9  85.9   25.1  29.1     7.43       
+ 2007 4  54.8   18.4    26.9  82.4   34.4  29.2     7.97       
+ 2019 4  56.3   17.7    26.0  77.7   34.8  31.5     7.75       
+ 2025 4  57.4   16.9    25.8  75.9   34.6  31.1     8.19       
+ 2026 2  57.8   16.7    25.6  74.8   34.5  30.6     8.10       

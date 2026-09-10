@@ -1,0 +1,38 @@
+Tax Foundation labor-share replication
+Source: DiSalvo & York, Tax Foundation, 2026-09-03
+Data:   BEA NIPA Table 1.10, quarterly, vintage 2026-09-09 
+Latest quarter in data: 2026Q2 
+
+Identity checks (max abs deviation, $ millions; BEA publishes to $1m):
+  GDI = comp + TOPI_net + NOS + CFC              : 2.0000
+  ucap = private NOS - proprietors - corp taxes  : 2.0000
+  net income = GDI - CFC - TOPI - ctax - govt ent: 3.0000
+  three net-income shares sum to 100            : 1.42e-14
+  quarters with an incomplete income split      : 0
+
+ item                                          tf_claim replicated
+ GDI, $ trillion SAAR (latest quarter)         32.2     32.2      
+ Net income, $ trillion SAAR                   23.7     23.8      
+ Compensation, cents per $ of GDI              50.4     50.4      
+   Wages and salaries                          41.5     41.5      
+   Supplements                                 8.9      8.9       
+ Unambiguous capital, cents per $ of GDI       ~17      16.7      
+   of which rental income of persons           3.6      3.6       
+ Proprietors' income, cents per $ of GDI       6.7      6.7       
+ Capital + proprietors, cents per $ of GDI     24       23.4      
+ Consumption of fixed capital, cents per $     ~17      16.7      
+ Taxes on production and imports (net), cents  7.0      7.0       
+ Taxes on corporate income, cents              2.8      2.8       
+ LABOR share of net income, latest             68.3     68.3      
+ CAPITAL share of net income, latest           22.6     22.6      
+ PROPRIETORS' share of net income, latest      9.1      9.1       
+ Max capital share of net income, latest       31.7     31.7      
+ Labor share of net income, 1947-49 avg        ~69      69.2      
+ Capital share of net income, 1947-49 avg      ~13      13.0      
+ Proprietors' share of net income, 1947-49 avg ~18      17.8      
+ Labor share of net income, 1970s avg          ~75      75.4      
+ Proprietors' share of net income, 1970        ~10      9.6       
+ Proprietors' share, 1982 trough               6.7      6.8       
+ Capital share of net income, 2000             17       16.6      
+
+All TF figures reproduce to the precision reported in the blog post.

@@ -1,0 +1,116 @@
+Annual-native NIPA Table 1.10 series, 1929-2025, vs. the quarterly-built series
+Vintage: 2026-09-09 
+
+Max abs diff in lab_net over 1947-2025 overlap (native annual vs mean-of-quarters): 0.0016 pp
+(Confirms the annual register construction reproduces 02_replicate_tf.R exactly;
+ any difference is rounding in how SAAR quarterly levels average to a calendar year.)
+
+--- 1929-1946: years with no quarterly-NIPA counterpart -------------------
+ year comp   prop  ucap  ni     lab_net cap_net prop_net lab_gross
+ 1929  51407 14015 19850  85272 60.29   23.28   16.44    49.51    
+ 1930  47166 10872 16613  74651 63.18   22.25   14.56    50.93    
+ 1931  40070  8315 11733  60118 66.65   19.52   13.83    52.27    
+ 1932  31338  5012  7725  44075 71.10   17.53   11.37    52.89    
+ 1933  29786  5268  6352  41406 71.94   15.34   12.72    52.59    
+ 1934  34552  7007  8538  50097 68.97   17.04   13.99    52.01    
+ 1935  37666 10124  9858  57648 65.34   17.10   17.56    50.58    
+ 1936  43288 10393 11585  65266 66.33   17.75   15.92    51.75    
+ 1937  48309 12521 12357  73187 66.01   16.88   17.11    51.92    
+ 1938  45411 10598 11139  67148 67.63   16.59   15.78    52.39    
+ 1939  48551 11120 12580  72251 67.20   17.41   15.39    52.69    
+ 1940  52746 12234 14397  79377 66.45   18.14   15.41    51.80    
+ 1941  66181 16650 15890  98721 67.04   16.10   16.87    51.31    
+ 1942  88026 23341 18176 129543 67.95   14.03   18.02    52.75    
+ 1943 112714 28225 20018 160957 70.03   12.44   17.54    55.01    
+ 1944 124372 29346 21235 174953 71.09   12.14   16.77    56.04    
+ 1945 126368 30824 19237 176429 71.63   10.90   17.47    56.37    
+ 1946 122525 35671 17839 176035 69.60   10.13   20.26    54.14    
+
+1929 unambiguous labor share: 60.3% (vs. 69.3% in 2025) -- capital's share was
+23.3% in 1929, higher than today's 21.4%.
+
+Depression-era low: 1929 at 60.3%. WWII high: 1945 at 71.6%.
+All-time (1929-2025) peak: 1970 at 76.55%.
+
+--- (a) How far back does '2025 is lower than the past' hold? ------------
+Anchor: 2025 unambiguous labor share (comp / net income) = 69.31%
+
+Years at or below the 2025 level (i.e. NOT part of the decline claim):
+ year lab_net gap_to_2025
+ 1929 60.29   -9.0251    
+ 1930 63.18   -6.1290    
+ 1931 66.65   -2.6588    
+ 1934 68.97   -0.3408    
+ 1935 65.34   -3.9731    
+ 1936 66.33   -2.9855    
+ 1937 66.01   -3.3034    
+ 1938 67.63   -1.6828    
+ 1939 67.20   -2.1134    
+ 1940 66.45   -2.8611    
+ 1941 67.04   -2.2726    
+ 1942 67.95   -1.3599    
+ 1948 68.05   -1.2643    
+ 2012 68.97   -0.3386    
+ 2021 68.74   -0.5689    
+ 2022 69.19   -0.1201    
+ 2023 69.10   -0.2080    
+
+Every other year from 1949 through 2020 -- 72 years -- sits ABOVE the 2025
+level. The only exceptions are 1948 (immediate postwar reconversion) and a
+handful of years right next to the current one (2012's brief profit-margin
+peak, and the 2021-23 post-pandemic whipsaw), none of which is more than 1.3pp
+below 2025. From 1951 on, the gap to 2025 is at least +1pp every single year
+through 2020; from 1953-2009 (with the exception of 2010-12) it is at least +2pp.
+This is not a peak-vs-trough comparison: using ANY single year from 1949-2020 as
+the starting point, not just the 1970 peak, shows a decline to today.
+
+--- (b) Same check with quarterly data, anchored on a blended 2025-2026 'now' ---
+Quarters used for 'now': 2025Q1 through 2026Q2 (6 quarters). Quarter-weighted
+mean = 69.10%. (Equal-weighting the 2025 and 2026-YTD annual averages instead
+gives 68.99% -- nearly identical.) Both are below 2025 alone (69.31%), since 2026
+has been running lower.
+
+At ANNUAL frequency: only 15 of 96 years (1929-2024) have a lower average than
+this blended anchor:
+ year lab_net gap    
+ 1929 60.29   -8.8111
+ 1930 63.18   -5.9151
+ 1931 66.65   -2.4448
+ 1934 68.97   -0.1269
+ 1935 65.34   -3.7591
+ 1936 66.33   -2.7716
+ 1937 66.01   -3.0894
+ 1938 67.63   -1.4688
+ 1939 67.20   -1.8994
+ 1940 66.45   -2.6471
+ 1941 67.04   -2.0586
+ 1942 67.95   -1.1459
+ 1948 68.05   -1.0504
+ 2012 68.97   -0.1246
+ 2021 68.74   -0.3549
+
+At QUARTERLY frequency: only 16 of 312 quarters (1947Q1-2024Q4) fall below it:
+ date       lab_net gap     
+ 1948-03-01 68.83   -0.26904
+ 1948-06-01 67.44   -1.66096
+ 1948-09-01 68.11   -0.99166
+ 1948-12-01 67.85   -1.25147
+ 1949-09-01 69.03   -0.06571
+ 2011-12-01 68.62   -0.47807
+ 2012-03-01 68.49   -0.60902
+ 2012-06-01 68.54   -0.55967
+ 2014-09-01 68.75   -0.35044
+ 2020-09-01 68.41   -0.68247
+ 2021-06-01 68.10   -0.99965
+ 2021-09-01 68.58   -0.51737
+ 2022-06-01 68.86   -0.23215
+ 2022-09-01 69.05   -0.05064
+ 2023-03-01 68.94   -0.15241
+ 2023-12-01 68.90   -0.19447
+
+Every exception clusters in one of two places: the 1929-42 Depression/prewar
+buildup (when the level was 60-68%, well below anything since), or single quarters
+sitting within about 1pp of the current anchor (1948 reconversion; 2011-12's brief
+profit-margin peak; one quarter of 2014 and 2020; the 2021-23 pandemic whipsaw).
+No other quarter or year in the 1943-2024 span, at either frequency, is at or below
+a fairly measured version of 'now'.

@@ -1,0 +1,55 @@
+Labor share under alternative conventions, all from NIPA
+Vintage: 2026-09-09 | latest annual point uses 2 quarter(s) of 2026 
+
+ measure                                        1947-49 1970s 2000s 2015-19
+ V1 TF baseline: comp / net income              69.2    75.4  72.6  70.4   
+ V2 Labor upper bound: (comp+prop) / net income 87.0    85.0  82.2  80.0   
+ V3 Proprietors 75% labor (Smith et al. 2019)   82.5    82.6  79.8  77.6   
+ V4 Pre-corporate-tax net income                65.6    72.5  70.6  68.9   
+ V5 Ex rental income of persons                 71.8    76.8  74.3  73.6   
+ V6 Ex-housing + labor upper bound              90.3    86.5  84.3  83.6   
+ V7 Business sector only (ex govt, nonprofits)  64.6    69.7  66.3  63.9   
+ V7b Business sector, labor upper bound         85.1    81.5  78.2  75.6   
+ V8 Corporate sector, TF convention             84.1    84.7  83.0  77.8   
+ V8b Corporate sector, net of production taxes  76.0    79.2  79.1  74.7   
+ V8c Corporate sector, comp / net value added   68.5    71.5  71.6  67.7   
+ V9 Gross: comp / GDI                           53.1    57.2  55.1  53.2   
+ latest chg vs 1947-49 chg vs peak peak yr
+ 68.7    -0.499         -7.88      1970   
+ 77.8    -9.221        -10.63      1947   
+ 75.5    -7.041         -8.60      1953   
+ 66.3     0.707         -7.53      1980   
+ 72.2     0.370         -6.39      1970   
+ 81.7    -8.564        -10.03      1947   
+ 62.4    -2.167         -8.95      1980   
+ 73.3   -11.723        -13.31      1947   
+ 74.8    -9.383        -12.54      1953   
+ 70.3    -5.615        -12.51      2001   
+ 63.7    -4.769        -11.81      2001   
+ 50.7    -2.445         -7.68      1970   
+
+
+Rank of 2025 (last full calendar year) among 79 annual observations, 1 = lowest ever.
+latest_value is 2026 to date and is shown for reference only.
+ measure     full_year_value full_year_rank latest_value n_obs_full
+ v1_tf       69.31            6             68.67        79        
+ v2_labmax   78.59            2             77.79        79        
+ v3_prop75   76.27            3             75.51        79        
+ v4_pretax   67.25           12             66.26        79        
+ v5_exhouse  72.89           13             72.15        79        
+ v7_business 63.08           10             62.40        79        
+ v8_corp_tf  75.89            5             74.76        79        
+ v8_corp_std 65.32            2             63.72        79        
+ v9_gross    51.58            1             50.69        79        
+
+
+Composition drift that the 'unambiguous labor' comparison ignores:
+ year prop_share rental_share govnp_share cap_tf cap_exhouse
+ 1947 18.32      3.650        13.2        11.6    8.23      
+ 1948 18.53      3.531        12.2        13.4   10.25      
+ 1949 16.68      3.749        13.6        14.0   10.62      
+ 1970  9.55      2.538        19.5        13.9   11.65      
+ 1980  8.08      0.894        17.7        15.5   14.74      
+ 2000  9.51      2.314        17.3        16.6   14.67      
+ 2019  9.57      4.234        17.7        20.0   16.42      
+ 2026  9.12      4.829        16.7        22.2   18.27      

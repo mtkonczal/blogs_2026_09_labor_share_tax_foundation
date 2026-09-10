@@ -1,0 +1,32 @@
+Shift-share of the Tax Foundation net labor share, percentage points
+Vintage: 2026-09-09 
+
+Sector labor shares and net-income weights, selected years:
+ year L    l_corp l_gov l_oth w_corp w_gov w_oth
+ 1947 70.1 86.5   100   36.7  0.503  0.132 0.365
+ 1948 68.0 83.2   100   35.7  0.517  0.122 0.361
+ 1949 69.4 82.8   100   37.5  0.515  0.136 0.349
+ 1970 76.6 86.1   100   34.3  0.568  0.195 0.237
+ 1980 76.4 85.7   100   31.4  0.606  0.177 0.217
+ 2000 73.8 85.9   100   25.1  0.588  0.173 0.239
+ 2019 70.5 77.7   100   34.8  0.563  0.177 0.260
+ 2025 69.3 75.9   100   34.6  0.574  0.169 0.258
+ 2026 68.7 74.8   100   34.5  0.578  0.167 0.256
+
+
+Decomposition of the change in the TF net labor share:
+ period               dL     within_corp within_gov within_oth between_corp
+ 1947-49 -> 2026 (2q) -0.462 -5.06       2.10e-15   -0.659      5.208      
+ 1947-49 -> 1970s      6.207  0.29       2.25e-15   -1.455      6.045      
+ 1970s -> 2026        -6.669 -5.70       0.00e+00    0.681     -0.487      
+ 2000-07 -> 2026      -3.755 -4.73       0.00e+00    1.079      1.585      
+ 1947-49 -> 2026Q2    -0.812 -5.38       2.10e-15   -0.675      5.313      
+ between_gov between_oth within_tot between_tot
+  3.69       -3.644      -5.72       5.256     
+  5.73       -4.406      -1.17       7.373     
+ -2.04        0.877      -5.02      -1.651     
+ -1.54       -0.153      -3.65      -0.103     
+  3.59       -3.660      -6.05       5.242     
+
+within_*  = sector labor share moved, holding its weight fixed
+between_* = sector's weight in net income moved, holding its labor share fixed
