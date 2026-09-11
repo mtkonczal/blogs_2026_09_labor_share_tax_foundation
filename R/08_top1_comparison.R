@@ -78,24 +78,35 @@ d8 <- d |>
             `Capital share of net income\n(TF convention)` = cap_net,
             `Top 1% share of pretax\nnational income (WID)` = top1) |>
   pivot_longer(-year)
+lab8 <- d8 |> group_by(name) |> slice_max(year, n = 1) |> ungroup() |>
+  mutate(short  = if_else(grepl("^Capital", name), "Capital share (TF)", "Top 1% share (WID)"),
+         lab    = sprintf("%s  %.1f%%", short, value),
+         y_lab  = value + if_else(short == "Capital share (TF)", 0.55, -0.55))
 
-p8 <- ggplot(d8, aes(year, value)) +
+# Both series are already in comparable units -- percent of a national income
+# aggregate -- and cover almost the same 10-23% range (see the correlation
+# check above), so one shared axis is not a rescale-to-taste; a dual axis
+# with independently chosen ranges would be.
+p8 <- ggplot(d8, aes(year, value, colour = name)) +
   annotate("rect", xmin = 1941, xmax = 1945, ymin = -Inf, ymax = Inf,
            fill = "grey90", alpha = 0.5) +
   geom_vline(xintercept = min(nowcast_yrs) - 0.5, linetype = "22", colour = "grey70") +
-  geom_line(linewidth = 0.7, colour = "#1B4F72") +
-  facet_wrap(~name, ncol = 1, scales = "free_y", strip.position = "left") +
-  scale_x_continuous(breaks = seq(1930, 2020, 10)) +
+  geom_line(linewidth = 0.7) +
+  geom_text(data = lab8, aes(label = lab, y = y_lab),
+            hjust = 0, nudge_x = 1.2, size = 3.2, fontface = "bold") +
+  scale_colour_manual(values = c("Capital share of net income\n(TF convention)"  = "#1B4F72",
+                                 "Top 1% share of pretax\nnational income (WID)" = "#B54708")) +
+  scale_x_continuous(breaks = seq(1930, 2020, 10), limits = c(1929, max(d8$year) + 16),
+                     expand = expansion(0)) +
+  coord_cartesian(clip = "off") +
   labs(title = "The capital share and top-1% income concentration move together",
        subtitle = wrp(sprintf(paste0("Annual, 1929-%d. Correlation of levels r = %.2f; of year-over-year changes ",
                                      "r = %.2f. Dashed line marks WID's nowcast years for the US (%s), which ",
                                      "repeat the last observed value rather than realized tax data."),
                               max(d$year), r_level, r_change, paste(nowcast_yrs, collapse = "-")), 100),
-       x = NULL, y = NULL,
+       x = NULL, y = "Percent",
        caption = wrp(paste0("Source: BEA NIPA Table 1.10 (annual register); World Inequality Database, ",
                             "sptinc992j, p99p100, USA, via Our World in Data. Author's calculations."), 100)) +
-  theme_ls() +
-  theme(strip.placement = "outside", strip.text = element_text(face = "bold", size = 9),
-        panel.spacing = unit(1, "lines"))
-ggsave(file.path(FIGS, "f09_top1_vs_capital.png"), p8, width = 8.5, height = 6.2, dpi = 200)
+  theme_ls() + theme(plot.margin = margin(6, 70, 6, 6))
+ggsave(file.path(FIGS, "f09_top1_vs_capital.png"), p8, width = 9, height = 5.3, dpi = 200)
 cat("\nFigure written: f09_top1_vs_capital.png\n")

@@ -4,3 +4,8 @@
 data/raw/
 
 .DS_Store
+
+# Quarto render intermediates (factcheck.html itself is tracked)
+docs/*.knit.md
+docs/.quarto/
+/.quarto/

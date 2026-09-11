@@ -1,0 +1,277 @@
+---
+title: "How you measure it: a survey of labor-share and corporate-profit conventions"
+subtitle: "Quarterly NIPA (and BLS) data only, 1947Q1 forward -- no annual aggregation"
+date: today
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+    code-tools: true
+    toc: true
+    toc-location: left
+    theme: flatly
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+library(dplyr)
+library(tidyr)
+library(readr)
+library(ggplot2)
+library(scales)
+library(gt)
+
+panel <- read_csv("../data/derived/measures_survey_quarterly.csv", show_col_types = FALSE)
+meta  <- read_csv("../data/derived/measures_survey_meta.csv",      show_col_types = FALSE)
+rk    <- read_csv("../data/derived/measures_survey_ranking.csv",   show_col_types = FALSE)
+
+last_date <- max(panel$date)
+last_q    <- paste0(format(last_date, "%Y"), "Q", (as.integer(format(last_date, "%m")) + 2) %/% 3)
+first_q   <- paste0(format(min(panel$date), "%Y"), "Q1")
+
+theme_ls <- function(base_size = 12) {
+  theme_minimal(base_size = base_size) +
+    theme(panel.grid.minor = element_blank(),
+          panel.grid.major = element_line(linewidth = 0.25, colour = "grey85"),
+          plot.title    = element_text(face = "bold", size = rel(1.05)),
+          plot.subtitle = element_text(colour = "grey30", size = rel(0.85)),
+          plot.caption  = element_text(colour = "grey45", hjust = 0, size = rel(0.72)))
+}
+wrp <- function(x, n = 100) paste(strwrap(x, width = n), collapse = "\n")
+
+plot_measure <- function(id_, extreme = c("low", "high")) {
+  extreme <- match.arg(extreme)
+  x  <- panel |> filter(id == id_) |> arrange(date)
+  mr <- meta  |> filter(id == id_)
+  r  <- rk    |> filter(id == id_)
+  is_index <- mr$unit == "Index, 2017=100"
+  col <- if (mr$group == "Labor share") "#1B4F72" else "#B54708"
+
+  ref_date  <- if (extreme == "low") r$record_date else r$record_high_date
+  ref_value <- if (extreme == "low") r$record_value else r$record_high_value
+  ref_lab   <- if (extreme == "low") "record low" else "record high"
+
+  p <- ggplot(x, aes(date, value)) +
+    geom_hline(yintercept = ref_value, linetype = "22", colour = "grey55") +
+    geom_line(linewidth = 0.7, colour = col) +
+    geom_point(data = x |> slice_max(date, n = 1), size = 1.8, colour = col) +
+    annotate("text", x = ref_date, y = ref_value,
+             label = sprintf("%s: %.1f (%s)", ref_lab, ref_value,
+                              paste0(format(ref_date, "%Y"), "Q", (as.integer(format(ref_date, "%m")) + 2) %/% 3)),
+             hjust = 0.05, vjust = -0.6, size = 2.9, colour = "grey35") +
+    scale_x_date(breaks = seq(as.Date("1950-01-01"), last_date, by = "10 years"), date_labels = "%Y") +
+    labs(title = NULL,
+         subtitle = sprintf("%s | %s | latest (%s): %.1f", mr$sector, mr$basis, last_q, r$latest_value),
+         x = NULL, y = mr$unit,
+         caption = paste0("Source: ", mr$source, ". Quarterly, ", first_q, "-", last_q, ".")) +
+    theme_ls()
+
+  if (is_index) {
+    p <- p + scale_y_continuous(labels = label_number(accuracy = 1))
+  } else {
+    p <- p + scale_y_continuous(labels = label_percent(scale = 1))
+  }
+  p
+}
+
+make_table <- function(ids, extreme = c("low", "high")) {
+  extreme <- match.arg(extreme)
+  d <- rk |> filter(id %in% ids) |> left_join(meta |> select(id, description), by = "id")
+  d <- d[match(ids, d$id), ]
+  if (extreme == "low") {
+    d <- d |> transmute(Name = name, Description = description,
+                         `Is it the lowest?` = lowest_label, Context = context)
+  } else {
+    d <- d |> transmute(Name = name, Description = description,
+                         `Is it the highest?` = highest_label, Context = context_high)
+  }
+  d |> gt() |>
+    tab_options(table.font.size = 13, data_row.padding = px(6)) |>
+    cols_width(Name ~ px(170), Description ~ px(340),
+               starts_with("Is it") ~ px(120), Context ~ px(340)) |>
+    opt_row_striping()
+}
+```
+
+Every "labor share is falling" or "labor share made a round trip" argument rests on a choice
+of numerator, denominator and universe that the data itself doesn't dictate. This note lays
+out the choices side by side rather than picking one. It's built to sit next to
+`docs/replication_and_literature.md`, which replicates and stress-tests the Tax Foundation's
+own specific convention; this note instead surveys the wider menu, including the four
+different conventions charted (without being reconciled) in an internal deck,
+`draft_deck_labor_share_trend_mkonczal (2).pptx`.
+
+**Scope.** Quarterly only, `r first_q`-`r last_q` -- NIPA Table 1.10 and 1.14 are published
+quarterly back to 1947Q1, so that's the full available window; nothing here is annualized.
+Two axes run through every measure below:
+
+- **Gross vs. net.** Whether depreciation (consumption of fixed capital) is removed from the
+  income base. Net is the standard correction in the literature
+  ([Rognlie 2015](https://www.brookings.edu/wp-content/uploads/2016/07/2015a_rognlie.pdf);
+  [Bridgman 2018](https://www.cambridge.org/core/journals/macroeconomic-dynamics/article/abs/is-labors-loss-capitals-gain-gross-versus-net-labor-shares/957C5C3D90762547B3CF4924EF34F4E9)),
+  and changes the *level* a lot; whether it changes the *trend* is measure-specific and shown
+  below for each one.
+- **Universe.** Economy-wide (NIPA Table 1.10), the BLS's own official nonfarm-business
+  statistic, all corporations (NIPA Table 1.14), or nonfinancial corporations only (also
+  Table 1.14, and the internal deck's preferred universe since it has no proprietors' income
+  or imputed rent to allocate).
+
+Within the economy-wide universe, proprietors' income is genuinely ambiguous -- it's a mix of
+labor and capital return that NIPA doesn't split
+([Gollin 2002](https://www.journals.uchicago.edu/doi/10.1086/338747)) -- so three allocations
+are shown: all of it counted as capital (the narrowest labor share), 75% to labor
+([Smith, Yagan, Zidar and Zwick 2019](https://academic.oup.com/qje/article-abstract/134/4/1675/5542244)),
+and all of it counted as labor (the widest). Corporate-sector measures don't have this
+problem: wages on one line, profits on another.
+
+Every number below is a direct BEA NIPA or BLS series or ratio of them -- nothing is
+estimated, smoothed or seasonally-readjusted beyond what BEA/BLS already publish. Full
+definitions and series codes are in `R/10_measures_survey.R`.
+
+## Labor share
+
+### Economy-wide
+
+```{r}
+#| results: asis
+for (id_ in c("l_gross_econ", "l_net_econ_std", "l_net_tf", "l_net_labmax", "l_net_prop75")) {
+  nm <- meta$name[meta$id == id_]
+  cat(sprintf("\n\n#### %s\n\n", nm))
+  print(plot_measure(id_, "low"))
+}
+```
+
+### BLS official measure
+
+```{r}
+#| results: asis
+cat(sprintf("\n\n#### %s\n\n", meta$name[meta$id == "l_bls_nfb"]))
+print(plot_measure("l_bls_nfb", "low"))
+```
+
+Note the units: this is BLS's own index (2017 = 100), not a percent of income. Ranking it
+against its own history is still meaningful -- it's a fixed-base rescaling of the same
+compensation-to-output ratio -- but the level isn't comparable to the percent-of-income
+measures above or below.
+
+### Corporate business (all corporations)
+
+```{r}
+#| results: asis
+for (id_ in c("l_corp_gross", "l_corp_net_std", "l_corp_net_extax")) {
+  cat(sprintf("\n\n#### %s\n\n", meta$name[meta$id == id_]))
+  print(plot_measure(id_, "low"))
+}
+```
+
+### Nonfinancial corporate business
+
+The internal deck's preferred universe (slides 5 and 16): no proprietors' income, no
+financial-sector profits, no imputed housing rent to argue about.
+
+```{r}
+#| results: asis
+for (id_ in c("l_nfcorp_gross", "l_nfcorp_net_std", "l_nfcorp_net_extax")) {
+  cat(sprintf("\n\n#### %s\n\n", meta$name[meta$id == id_]))
+  print(plot_measure(id_, "low"))
+}
+```
+
+### Labor share: is it a record low?
+
+```{r}
+labor_order <- c("l_gross_econ", "l_net_econ_std", "l_net_tf", "l_net_labmax", "l_net_prop75",
+                  "l_bls_nfb", "l_corp_gross", "l_corp_net_std", "l_corp_net_extax",
+                  "l_nfcorp_gross", "l_nfcorp_net_std", "l_nfcorp_net_extax")
+make_table(labor_order, "low")
+```
+
+```{r}
+oxford_and <- function(x) {
+  if (length(x) <= 1) return(paste(x, collapse = ""))
+  paste0(paste(x[-length(x)], collapse = ", "), " and ", x[length(x)])
+}
+lab_rk        <- rk |> filter(id %in% labor_order)
+n_labor_low   <- sum(lab_rk$is_record_low)
+not_low_names <- lab_rk$name[!lab_rk$is_record_low]
+```
+
+`r n_labor_low` of the `r length(labor_order)` labor-share measures above are sitting at
+their record low of the `r first_q`-`r last_q` quarterly series. The `r length(labor_order) - n_labor_low`
+that aren't -- `r oxford_and(not_low_names)` -- are each within about two points of their own
+record, not comfortably inside their historical range.
+
+## Corporate profits
+
+The mirror question: a falling labor share and a rising profit share are largely the same
+fact viewed from opposite sides of the same ratio (compensation + capital income + taxes sum
+to the whole by construction), so the tables below ask about **record highs**, not record
+lows.
+
+### Economy-wide
+
+```{r}
+#| results: asis
+cat(sprintf("\n\n#### %s\n\n", meta$name[meta$id == "p_all_pretax_gdi"]))
+print(plot_measure("p_all_pretax_gdi", "high"))
+```
+
+### Corporate business (all corporations)
+
+```{r}
+#| results: asis
+for (id_ in c("p_all_pretax_gross", "p_all_pretax_net", "p_all_aftertax_gross", "p_all_aftertax_net")) {
+  cat(sprintf("\n\n#### %s\n\n", meta$name[meta$id == id_]))
+  print(plot_measure(id_, "high"))
+}
+```
+
+### Nonfinancial corporate business
+
+Slide 2 of the internal deck charts the first of these (pretax, gross) to argue profits
+"remain elevated" post-pandemic; the other three vary the tax and depreciation treatment.
+
+```{r}
+#| results: asis
+for (id_ in c("p_nf_pretax_gross", "p_nf_pretax_net", "p_nf_aftertax_gross", "p_nf_nos_net")) {
+  cat(sprintf("\n\n#### %s\n\n", meta$name[meta$id == id_]))
+  print(plot_measure(id_, "high"))
+}
+```
+
+### Corporate profits: is it a record high?
+
+```{r}
+profit_order <- c("p_all_pretax_gdi", "p_all_pretax_gross", "p_all_pretax_net",
+                   "p_all_aftertax_gross", "p_all_aftertax_net",
+                   "p_nf_pretax_gross", "p_nf_pretax_net", "p_nf_aftertax_gross", "p_nf_nos_net")
+make_table(profit_order, "high")
+```
+
+```{r}
+prof_rk        <- rk |> filter(id %in% profit_order)
+n_profit_high  <- sum(prof_rk$is_record_high)
+high_names     <- prof_rk$name[prof_rk$is_record_high]
+nf_rk          <- prof_rk |> filter(sector == "Nonfinancial corporate")
+nf_rank_range  <- range(nf_rk$rank_high)
+```
+
+`r n_profit_high` of the `r length(profit_order)` profit measures -- `r oxford_and(high_names)`
+-- are at their record high. The nonfinancial-only cuts, which is the universe the internal
+deck actually uses, are elevated (`r nf_rank_range[1]`nd-`r nf_rank_range[2]`th highest of
+`r prof_rk$n[1]` quarters) but have each been marginally exceeded at some point since 1947, mostly around the
+2011-13 and 2021-22 profit-margin peaks.
+
+## What this does and doesn't settle
+
+Twelve labor-share conventions and nine corporate-profit conventions, spanning gross/net,
+four sector universes and three proprietor-income allocations, agree that both series sit at
+or extremely near an 80-year extreme as of `r last_q`. That's a statement about levels. It
+says nothing about whether the capital income these measures net out is a competitive return
+or economic rent -- see `docs/replication_and_literature.md` for the markup and superstar-firm
+literature that speaks to that question, which an aggregate income-share identity can't
+answer on its own.

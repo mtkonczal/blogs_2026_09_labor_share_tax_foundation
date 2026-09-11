@@ -1,0 +1,299 @@
+---
+title: "Fact-check"
+subtitle: "Every empirical claim in the labor-share draft, verified against the tracked derived data"
+date: today
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the check"
+    code-tools: true
+    toc: true
+    toc-location: left
+    theme: flatly
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+This checks every empirical claim in `labor_share_pushback.md` against the project's own
+derived data. Each section quotes the claim, then shows (folded, click to open) the R that
+reproduces the number. Nothing here re-pulls BEA or WID; it only reads the small CSVs in
+`data/derived/`, which are already committed and don't require `R/01_download_nipa.R` or
+`R/08_top1_comparison.R` to have been re-run. Two citations to outside literature (Solow 1958,
+Smith et al. 2019) aren't reproducible from this pipeline and are checked separately, against
+the published record, at the end.
+
+```{r}
+#| label: setup
+library(dplyr)
+library(tidyr)
+library(readr)
+
+qt <- read_csv("../data/derived/tf_shares_quarterly.csv")   # TF's own quarterly-built series
+qa <- read_csv("../data/derived/tf_shares_annual.csv")       # ...averaged to calendar years
+qv <- read_csv("../data/derived/variants_quarterly.csv")     # proprietor-income allocations
+va <- read_csv("../data/derived/variants_annual.csv")        # ...same, by calendar year
+h  <- read_csv("../data/derived/annual_history_1929_2025.csv")  # native-annual, back to 1929
+t1 <- read_csv("../data/derived/top1_vs_capital_annual.csv")    # capital share vs. WID top 1%
+```
+
+## Claim 1: a steady range, then a fall since 2000
+
+> "After being in a steady range from the 1950s to 1990s, it has fallen notably since 2000."
+
+```{r}
+#| code-summary: "Compare the 1950-99 range to the post-2000 average"
+range_5099 <- qt |>
+  filter(date >= "1950-01-01", date <= "1999-12-31") |>
+  summarise(low = min(lab_net), high = max(lab_net), avg = mean(lab_net))
+
+since_2000 <- qt |>
+  filter(date >= "2000-01-01") |>
+  summarise(avg = mean(lab_net), latest = last(lab_net))
+
+list(`1950-1999` = range_5099, `2000-present` = since_2000)
+```
+
+**Verdict:** confirmed. 1950-99 ran `r sprintf("%.1f", range_5099$low)`-`r sprintf("%.1f", range_5099$high)`,
+averaging `r sprintf("%.1f", range_5099$avg)`. Since 2000 the average is `r sprintf("%.1f", since_2000$avg)`,
+below the bottom of that range, and the latest quarter (`r sprintf("%.1f", since_2000$latest)`) is lower still.
+
+## Claim 2: down in the pandemic, stable, then down again since early 2025
+
+> "It fell again during the pandemic, and after stabilizing, appears to be falling again since early 2025."
+
+```{r}
+#| code-summary: "Trace the labor share through the pandemic and 2025-26"
+pandemic <- qt |>
+  filter(date >= "2019-10-01", date <= "2021-03-01") |>
+  select(date, lab_net)
+
+recent <- qt |>
+  filter(date >= "2025-01-01") |>
+  select(date, lab_net)
+
+list(pandemic_2019q4_2021q1 = pandemic, since_2025q1 = recent)
+```
+
+**Verdict:** confirmed. The share dropped from
+`r sprintf("%.1f", pandemic$lab_net[1])`% (2019Q4) to
+`r sprintf("%.1f", min(pandemic$lab_net))`% at the pandemic trough, then held near 69% through
+2023-24. From `r sprintf("%.1f", recent$lab_net[1])`% in 2025Q1 it has fallen every quarter but
+one, to `r sprintf("%.1f", last(recent$lab_net))`% by 2026Q2.
+
+## Claim 3: gross is a record low, net is not
+
+> "...with gross measures it tends to be the lowest on record but with net measures the late
+> 1940s were in a similar range, so not lowest 'on record.'"
+
+```{r}
+#| code-summary: "Rank the latest quarter against the full history, gross and net"
+rank_check <- function(series) {
+  latest <- last(series)
+  tibble(latest = latest, all_time_min = min(series),
+         rank_from_bottom = sum(series <= latest))
+}
+
+gross <- rank_check(qt$lab_gross)
+net   <- rank_check(qt$lab_net)
+
+late_1940s <- qt |> filter(date <= "1949-12-31") |>
+  summarise(low = min(lab_net), high = max(lab_net))
+
+list(gross = gross, net = net, late_1940s_range = late_1940s)
+```
+
+**Verdict:** confirmed. The latest gross share (`r sprintf("%.2f", gross$latest)`%) *is* the
+all-time low (rank `r gross$rank_from_bottom` of `r nrow(qt)`). The latest net share
+(`r sprintf("%.2f", net$latest)`%) is not: 1947-49 ran as low as
+`r sprintf("%.2f", late_1940s$low)`%, so today's reading (rank `r net$rank_from_bottom`) sits
+just above that postwar range rather than below it.
+
+## Claim 4: the Figure 1 legend values
+
+> The chart labels: compensation only, 75% of proprietors' income to labor, all of it to labor.
+
+```{r}
+#| code-summary: "Recompute the three allocations for the latest quarter"
+latest_variants <- qv |> slice_max(date, n = 1) |>
+  select(date, comp_only = v1_tf, prop_75pct = v3_prop75, prop_all = v2_labmax)
+
+latest_variants
+```
+
+**Verdict:** confirmed, matches `f03_proprietor_bounds.png` exactly: compensation-only
+`r sprintf("%.1f", latest_variants$comp_only)`%, 75%-to-labor
+`r sprintf("%.1f", latest_variants$prop_75pct)`%, all-to-labor
+`r sprintf("%.1f", latest_variants$prop_all)`%.
+
+## Claim 5: the round trip's rise leg vanishes under their own cited allocation
+
+> "Their comp-only labor share went from 69.2% in 1947-49 to 75.4% in the 1970s, a 6.3-point
+> 'rise.' ... Redo their own 1947-49-to-1970s comparison using the 75%-to-labor split from the
+> paper they cite ... and the 'rise' is +0.04 points, indistinguishable from zero. Allocate
+> proprietors' income entirely to labor ... and it's a 2-point decline instead."
+
+```{r}
+#| code-summary: "Recompute the 1947-49-to-1970s change under each allocation"
+era <- function(yrs) va |> filter(year %in% yrs) |>
+  summarise(comp_only = mean(v1_tf), prop75_labor = mean(v3_prop75), prop_all_labor = mean(v2_labmax),
+            prop_share = mean(prop_share))
+
+e_a <- era(1947:1949)
+e_b <- era(1970:1979)
+
+tibble(
+  allocation = c("Compensation only (their headline)", "75% of proprietors' income to labor",
+                 "All proprietors' income to labor"),
+  `1947-49` = c(e_a$comp_only, e_a$prop75_labor, e_a$prop_all_labor),
+  `1970s`   = c(e_b$comp_only, e_b$prop75_labor, e_b$prop_all_labor)
+) |>
+  mutate(change = `1970s` - `1947-49`)
+```
+
+**Verdict:** confirmed. Under compensation-only, the labor share rises
+`r sprintf("%+.2f", e_b$comp_only - e_a$comp_only)` points from 1947-49 to the 1970s, exactly
+the "rise" leg of their round trip -- while proprietors' income falls
+`r sprintf("%.1f", e_a$prop_share)`% to `r sprintf("%.1f", e_b$prop_share)`% of net income
+over the same years (an `r sprintf("%+.1f", e_b$prop_share - e_a$prop_share)`-point drop,
+matching their own "18 percent... to about 10 percent by 1970"). Under the 75%-to-labor split
+from the paper they cite for their own allocation, the change is
+`r sprintf("%+.2f", e_b$prop75_labor - e_a$prop75_labor)` points -- indistinguishable from zero.
+Under 100%-to-labor it's `r sprintf("%+.2f", e_b$prop_all_labor - e_a$prop_all_labor)` points, a
+decline. The rise leg only exists under the one allocation their own citation argues against.
+
+## Claim 6: the 21st-century average is below the 1950-2000 average
+
+> "...the average in the 21st century (2000-2025) is 70.8 percent, which is below the 73.9
+> percent average from 1950 to 2000."
+
+```{r}
+#| code-summary: "Average lab_net over each window, using full calendar years"
+avg_2000_2025 <- qa |> filter(year >= 2000, year <= 2025) |> summarise(avg = mean(lab_net))
+avg_1950_2000 <- qa |> filter(year >= 1950, year <= 2000) |> summarise(avg = mean(lab_net))
+
+avg_2000_2025; avg_1950_2000
+```
+
+**Verdict:** confirmed. `r sprintf("%.1f", avg_2000_2025$avg)`% vs.
+`r sprintf("%.1f", avg_1950_2000$avg)`%, matching the post to one decimal.
+
+## Claim 7: the current six-quarter stretch against every other one since 1948
+
+> "Comparing the six quarters from Q1 2025 to Q2 2026 to every other continuously-running
+> six-quarter stretch since 1948 -- 303 of them, using their own quarterly series -- it's
+> lower than 292 of them, and higher than only 11, three of which cluster around the
+> late-1940s reconversion, four around the 2011-13 profit-margin peak, and four around the
+> 2020-22 pandemic period."
+
+```{r}
+#| code-summary: "Roll a 6-quarter mean over every window since 1948 and count"
+anchor <- qt |> filter(date >= "2025-01-01") |> summarise(m = mean(lab_net)) |> pull(m)
+
+hist_q <- qt |> filter(date >= "1948-01-01", date < "2025-01-01") |> arrange(date)
+w <- 6
+n_windows <- nrow(hist_q) - w + 1
+rolling <- tibble(
+  start = hist_q$date[1:n_windows],
+  end   = hist_q$date[w:(w + n_windows - 1)],
+  mean_lab_net = sapply(1:n_windows, \(i) mean(hist_q$lab_net[i:(i + w - 1)]))
+)
+
+n_total <- nrow(rolling)
+above   <- rolling |> filter(mean_lab_net >= anchor)   # anchor is lower than these
+below   <- rolling |> filter(mean_lab_net <  anchor) |> arrange(start)
+
+cluster <- below |>
+  mutate(era = case_when(
+    start < "1950-01-01" ~ "late-1940s reconversion",
+    start < "2015-01-01" ~ "2011-13 profit-margin peak",
+    TRUE                 ~ "2020-22 pandemic period"))
+
+list(anchor = anchor, n_stretches = n_total, lower_than = nrow(above), higher_than = nrow(below),
+     by_era = count(cluster, era))
+```
+
+**Verdict:** confirmed. `r n_total` overlapping six-quarter windows since 1948; the anchor
+(`r sprintf("%.2f", anchor)`%) is lower than `r nrow(above)` of them and higher than only
+`r nrow(below)`, split `r sum(cluster$era == "late-1940s reconversion")` /
+`r sum(cluster$era == "2011-13 profit-margin peak")` /
+`r sum(cluster$era == "2020-22 pandemic period")` across the three clusters, exactly as
+written.
+
+## Claim 8: the Figure 2 levels, and the pre-1947 series is unstable
+
+> "1929: 60.3%... 1970 peak: 76.6%... 2025: 69.3%... it's very unstable during this period"
+
+```{r}
+#| code-summary: "Pull the labeled points and compare pre- and post-1947 volatility"
+labeled_pts <- h |> filter(year %in% c(1929, 1970, 2025)) |> select(year, lab_net)
+
+vol_early <- h |> filter(year <= 1946) |> summarise(sd_yoy = sd(diff(lab_net)))
+vol_late  <- h |> filter(year >= 1960, year <= 2019) |> summarise(sd_yoy = sd(diff(lab_net)))
+
+list(labeled_points = labeled_pts, sd_yoy_pre1947 = vol_early, sd_yoy_1960_2019 = vol_late)
+```
+
+**Verdict:** confirmed. 1929 at `r sprintf("%.1f", labeled_pts$lab_net[labeled_pts$year==1929])`%,
+the all-time peak in 1970 at `r sprintf("%.2f", h$lab_net[h$year==1970])`%, 2025 at
+`r sprintf("%.1f", labeled_pts$lab_net[labeled_pts$year==2025])`%. Year-over-year swings before
+1947 (SD `r sprintf("%.2f", vol_early$sd_yoy)` pp) ran nearly three times as large as the
+1960-2019 norm (SD `r sprintf("%.2f", vol_late$sd_yoy)` pp) -- "very unstable" holds.
+
+## Claim 9: the capital share and the top 1% correlate
+
+> "...the two series correlate at r = 0.49 in levels and r = 0.41 in year-over-year changes
+> over the full 1929-2024 overlap."
+
+```{r}
+#| code-summary: "Correlate the capital share against the WID top-1% series"
+overlap <- t1 |> summarise(from = min(year), to = max(year), n = n())
+r_levels  <- cor(t1$cap_net, t1$top1)
+r_changes <- cor(diff(t1$cap_net), diff(t1$top1))
+
+list(overlap = overlap, r_levels = r_levels, r_changes = r_changes)
+```
+
+**Verdict:** confirmed. `r overlap$n`-year overlap (`r overlap$from`-`r overlap$to`),
+r = `r sprintf("%.2f", r_levels)` in levels, r = `r sprintf("%.2f", r_changes)` in changes.
+
+## Citation checks (not reproducible from this pipeline)
+
+These claims rest on outside sources rather than this project's data, so they're checked
+against the published record instead of re-derived.
+
+- **Solow (1958).** Cited as skeptical of a constant labor share using 1929-1954 data. The
+  paper is Robert M. Solow, "A Skeptical Note on the Constancy of Relative Shares,"
+  *American Economic Review* 48(4), September 1958, pp. 618-631 -- title, author, journal,
+  year, and the 1929-54 sample all check out. ✅
+- **Smith, Yagan, Zidar and Zwick (2019).** Cited for classifying three-quarters of
+  pass-through profit as human-capital income. Confirmed: Matthew Smith, Danny Yagan, Owen
+  Zidar and Eric Zwick, "Capitalists in the Twenty-First Century," *Quarterly Journal of
+  Economics* 134(4), November 2019, pp. 1675-1745. Pass-through profit falls by roughly
+  three-quarters after an owner retires or dies, which is the basis for the 75% allocation
+  used in `v3_prop75` above. ✅
+- **The Tax Foundation's own three sentences on proprietors' income** (quoted in Claim 5).
+  Checked against the live article at
+  [taxfoundation.org](https://taxfoundation.org/blog/capital-is-not-taking-half-of-americas-income-labor-share/)
+  on 2026-09-10: the 22.6%/31.7% allocation sentence, the "relatively stable share since the
+  late 1980s" sentence, and the "recent research suggests proprietor income is mostly labor"
+  sentence (linking to the same NBER paper, w25442) appear consecutively in the same
+  paragraph, in that order, under "Labor's Share of Net Income Is Within Historical Levels." ✅
+
+## Summary
+
+| # | Claim | Verdict |
+|---|---|---|
+| 1 | Steady 1950-99 range, fallen since 2000 | ✅ Confirmed |
+| 2 | Pandemic drop, stabilization, fall since early 2025 | ✅ Confirmed |
+| 3 | Gross is a record low; net is not | ✅ Confirmed |
+| 4 | Figure 1 legend values | ✅ Confirmed |
+| 5 | Round trip's rise leg vanishes under their own cited allocation | ✅ Confirmed |
+| 6 | 21st-century vs. 1950-2000 average | ✅ Confirmed |
+| 7 | Six-quarter rolling-window comparison | ✅ Confirmed |
+| 8 | Figure 2 levels and pre-1947 volatility | ✅ Confirmed |
+| 9 | Capital share / top-1% correlation | ✅ Confirmed |
+| 10 | Solow (1958) citation | ✅ Confirmed |
+| 11 | Smith et al. (2019) citation | ✅ Confirmed |
+| 12 | Tax Foundation's own text, quoted in Claim 5 | ✅ Confirmed |

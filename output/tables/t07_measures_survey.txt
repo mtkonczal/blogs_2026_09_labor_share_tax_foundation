@@ -1,0 +1,52 @@
+Labor-share and corporate-profit measures survey, quarterly, 1947Q1-latest
+Vintage: 2026-09-10 
+
+--- Labor share ---
+ name                                                          
+ BLS official measure (nonfarm business)                       
+ Corporate business (all corporations), gross                  
+ Corporate business (all corporations), net of production taxes
+ Corporate business (all corporations), net                    
+ Economy-wide, gross                                           
+ Economy-wide, net of depreciation                             
+ Economy-wide, net, all proprietors' income to labor           
+ Economy-wide, net, 75% of proprietors' income to labor        
+ Economy-wide, net, proprietors' income excluded               
+ Nonfinancial corporate business, gross                        
+ Nonfinancial corporate business, net of production taxes      
+ Nonfinancial corporate business, net                          
+ sector                 basis latest_value rank_low n   lowest_label      
+ Nonfarm business (BLS) Net   93.4          1       318 Yes  -  record low
+ Corporate (all)        Gross 53.4          1       318 Yes  -  record low
+ Corporate (all)        Net   69.6          1       318 Yes  -  record low
+ Corporate (all)        Net   63.1          1       318 Yes  -  record low
+ Economy-wide           Gross 50.4          1       318 Yes  -  record low
+ Economy-wide           Net   60.5         12       318 No                
+ Economy-wide           Net   77.4          1       318 Yes  -  record low
+ Economy-wide           Net   75.1          1       318 Yes  -  record low
+ Economy-wide           Net   68.3          5       318 No                
+ Nonfinancial corporate Gross 54.7          1       318 Yes  -  record low
+ Nonfinancial corporate Net   71.9          1       318 Yes  -  record low
+ Nonfinancial corporate Net   64.7          1       318 Yes  -  record low
+
+--- Corporate profits (record-HIGH framing) ---
+ name                                                   sector                
+ Corporate profit margin, after tax, gross              Corporate (all)       
+ Corporate profit margin, after tax, net                Corporate (all)       
+ Corporate profits (pretax) as a share of GDI           Economy-wide          
+ Corporate profit margin, pretax, gross                 Corporate (all)       
+ Corporate profit margin, pretax, net                   Corporate (all)       
+ Nonfinancial corporate profit margin, after tax, gross Nonfinancial corporate
+ Nonfinancial net operating surplus, net                Nonfinancial corporate
+ Nonfinancial corporate profit margin, pretax, gross    Nonfinancial corporate
+ Nonfinancial corporate profit margin, pretax, net      Nonfinancial corporate
+ basis latest_value rank_high n   highest_label      
+ Gross 17.4          1        318 Yes  -  record high
+ Net   20.6          1        318 Yes  -  record high
+ Gross 13.2          1        318 Yes  -  record high
+ Gross 22.2          2        318 No                 
+ Net   26.2          1        318 Yes  -  record high
+ Gross 15.2          3        318 No                 
+ Net   25.3          3        318 No                 
+ Gross 19.6         10        318 No                 
+ Net   23.2          2        318 No                 
