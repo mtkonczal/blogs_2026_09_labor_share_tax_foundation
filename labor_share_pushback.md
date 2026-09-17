@@ -28,7 +28,7 @@ After being stable in the 1950s through 1990s, it fell, and fell again over the 
 
 ![Figure 2. Their measure with 0%, 50%, and 100% of proprietors' income counted as labor](output/figures/f11_proprietor_0_50_100_quarterly.png)
 
-Adding any prop income to labor share raises the level of income today but it also raises it even more in the 1940s, since prop income was a much bigger share of the economy then. At 50% or at 100% to labor, the current quarter isn’t just low, it’s the single lowest reading in the entire 1947-2026 series.
+For what it's worth, I have generally used 50% of prop income as labor income in my thinking, realizing I should probably update that higher. Adding any prop income to labor share raises the level of income today but it also raises it even more in the 1940s, since prop income was a much bigger share of the economy then. At 50% or at 100% to labor, the current quarter isn’t just low, it’s the single lowest reading in the entire 1947-2026 series.
 
 **Third**, as you can see from Figure 1, their idea of a “round trip” is really dependent on a handful of data points in the late 1940s when the quarterly data starts. But that’s a brief window. Sticking with their unambiguous labor share measure, the average in the 21st century (2000Q1-2026Q2) is 70.8%, which is below the 73.9% average from 1950-1999. While the average is 69.2% in 1947-1949, by 1950 to 1952 it’s 71.3% and it increases fast from there.
 
