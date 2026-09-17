@@ -16,7 +16,7 @@ lasty_lb <- if (nq_last == 4) as.character(yr_last) else
 cap_src <- paste0("Source: BEA NIPA Tables 1.10, 1.13, 1.14. Quarterly, SAAR, through ",
                   lastq, ". Author's calculations.")
 
-sv <- function(p, f, w = 8, h = 5) ggsave(file.path(FIGS, f), p, width = w, height = h, dpi = 200)
+sv <- function(p, f, w = 8, h = 5) ggsave(file.path(FIGS_SEC, f), p, width = w, height = h, dpi = 200)
 
 # Right-margin labelling helpers: extend the x range for direct labels but keep
 # axis breaks inside the data range so the panel does not show empty decades.

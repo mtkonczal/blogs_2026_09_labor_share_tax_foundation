@@ -293,7 +293,7 @@ write_derived(rk |> select(id, name, group, sector, basis, unit, source, n, star
                             is_record_low, is_record_high, lowest_label, highest_label, context, context_high),
               "measures_survey_ranking")
 
-sink(file.path(TABS, "t07_measures_survey.txt"))
+sink(file.path(TABS_SEC, "t07_measures_survey.txt"))
 cat("Labor-share and corporate-profit measures survey, quarterly, 1947Q1-latest\n")
 cat("Vintage:", format(Sys.time(), "%Y-%m-%d"), "\n\n")
 cat("--- Labor share ---\n")
@@ -306,4 +306,4 @@ print(as.data.frame(rk |> filter(group == "Corporate profits") |>
       digits = 3, right = FALSE, row.names = FALSE)
 sink()
 
-cat(readLines(file.path(TABS, "t07_measures_survey.txt")), sep = "\n")
+cat(readLines(file.path(TABS_SEC, "t07_measures_survey.txt")), sep = "\n")

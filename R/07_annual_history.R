@@ -81,7 +81,7 @@ peak <- h |> slice_max(lab_net, n = 1)
 dep_low <- h |> filter(year <= 1940) |> slice_min(lab_net, n = 1)
 wwii_hi <- h |> filter(year >= 1941, year <= 1945) |> slice_max(lab_net, n = 1)
 
-sink(file.path(TABS, "t05_annual_history_validation.txt"))
+sink(file.path(TABS_BLOG, "t05_annual_history_validation.txt"))
 cat("Annual-native NIPA Table 1.10 series, 1929-2025, vs. the quarterly-built series\n")
 cat("Vintage:", format(Sys.time(), "%Y-%m-%d"), "\n\n")
 cat(sprintf("Max abs diff in lab_net over 1947-2025 overlap (native annual vs mean-of-quarters): %.4f pp\n",
@@ -154,7 +154,7 @@ cat("No other quarter or year in the 1943-2024 span, at either frequency, is at 
 cat("a fairly measured version of 'now'.\n")
 sink()
 
-cat(readLines(file.path(TABS, "t05_annual_history_validation.txt")), sep = "\n")
+cat(readLines(file.path(TABS_BLOG, "t05_annual_history_validation.txt")), sep = "\n")
 
 # --- Figure: the full 1929-2025 history --------------------------------------
 wrp <- function(x, n = 95) paste(strwrap(x, width = n), collapse = "\n")
@@ -181,7 +181,7 @@ p8 <- ggplot(f8d, aes(year, lab_net)) +
        x = NULL, y = "Percent of net income",
        caption = "Source: BEA NIPA Table 1.10, annual register (1929-2025). Author's calculations.") +
   theme_ls()
-ggsave(file.path(FIGS, "f08_annual_history_1929.png"), p8, width = 8.5, height = 5.2, dpi = 200)
+ggsave(file.path(FIGS_BLOG, "f08_annual_history_1929.png"), p8, width = 8.5, height = 5.2, dpi = 200)
 
 cat("\nFigure written: f08_annual_history_1929.png\n")
 

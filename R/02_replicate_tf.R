@@ -142,7 +142,7 @@ chk <- tribble(
   "Capital share of net income, 2000",               "17",       sprintf("%.1f", a$cap_net[a$year == 2000])
 )
 
-sink(file.path(TABS, "t01_replication_validation.txt"))
+sink(file.path(TABS_SEC, "t01_replication_validation.txt"))
 cat("Tax Foundation labor-share replication\n")
 cat("Source: DiSalvo & York, Tax Foundation, 2026-09-03\n")
 cat("Data:   BEA NIPA Table 1.10, quarterly, vintage",
@@ -158,4 +158,4 @@ print(as.data.frame(chk), right = FALSE, row.names = FALSE)
 cat("\nAll TF figures reproduce to the precision reported in the blog post.\n")
 sink()
 
-cat(readLines(file.path(TABS, "t01_replication_validation.txt")), sep = "\n")
+cat(readLines(file.path(TABS_SEC, "t01_replication_validation.txt")), sep = "\n")

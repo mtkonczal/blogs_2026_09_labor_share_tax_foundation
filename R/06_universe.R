@@ -84,7 +84,7 @@ hist <- d |> group_by(year) |>
 
 write_derived(hist, "universe_weights_annual")
 
-sink(file.path(TABS, "t04_universe.txt"))
+sink(file.path(TABS_SEC, "t04_universe.txt"))
 cat("What is inside the Tax Foundation income universe\n")
 cat("BEA NIPA, vintage", format(Sys.time(), "%Y-%m-%d"), "| latest quarter", lq, "\n\n")
 cat("Composition of their net-income denominator ($",
@@ -104,4 +104,4 @@ print(as.data.frame(hist |> filter(year %in% c(1948, 1960, 1970, 1980, 1986, 199
       digits = 3, right = FALSE, row.names = FALSE)
 sink()
 
-cat(readLines(file.path(TABS, "t04_universe.txt")), sep = "\n")
+cat(readLines(file.path(TABS_SEC, "t04_universe.txt")), sep = "\n")

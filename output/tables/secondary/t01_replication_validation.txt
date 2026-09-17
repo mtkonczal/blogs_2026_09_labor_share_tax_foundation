@@ -1,6 +1,6 @@
 Tax Foundation labor-share replication
 Source: DiSalvo & York, Tax Foundation, 2026-09-03
-Data:   BEA NIPA Table 1.10, quarterly, vintage 2026-09-09 
+Data:   BEA NIPA Table 1.10, quarterly, vintage 2026-09-16 
 Latest quarter in data: 2026Q2 
 
 Identity checks (max abs deviation, $ millions; BEA publishes to $1m):

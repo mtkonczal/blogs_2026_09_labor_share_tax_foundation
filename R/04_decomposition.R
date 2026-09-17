@@ -96,7 +96,7 @@ dec_q <- shift_share(a_q, 1947:1949, 9999L, "1947-49", lastq_lbl)
 stopifnot(max(abs(dec$dL - dec$within_tot - dec$between_tot)) < 1e-8,
           abs(dec_q$dL - dec_q$within_tot - dec_q$between_tot) < 1e-8)
 
-sink(file.path(TABS, "t03_sector_decomposition.txt"))
+sink(file.path(TABS_SEC, "t03_sector_decomposition.txt"))
 cat("Shift-share of the Tax Foundation net labor share, percentage points\n")
 cat("Vintage:", format(Sys.time(), "%Y-%m-%d"), "\n\n")
 cat("Sector labor shares and net-income weights, selected years:\n")
@@ -109,4 +109,4 @@ cat("\nwithin_*  = sector labor share moved, holding its weight fixed\n")
 cat("between_* = sector's weight in net income moved, holding its labor share fixed\n")
 sink()
 
-cat(readLines(file.path(TABS, "t03_sector_decomposition.txt")), sep = "\n")
+cat(readLines(file.path(TABS_SEC, "t03_sector_decomposition.txt")), sep = "\n")

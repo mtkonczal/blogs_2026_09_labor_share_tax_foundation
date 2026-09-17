@@ -161,7 +161,7 @@ ranks <- tibble(measure = names(rk)[-1],
   latest_value    = sapply(names(rk)[-1], function(cc) rk[[cc]][rk$year == yr_part]),
   n_obs_full      = sum(rk$year <= yr_full))
 
-sink(file.path(TABS, "t02_variants_summary.txt"))
+sink(file.path(TABS_SEC, "t02_variants_summary.txt"))
 cat("Labor share under alternative conventions, all from NIPA\n")
 cat("Vintage:", format(Sys.time(), "%Y-%m-%d"),
     "| latest annual point uses", va$nq[nrow(va)], "quarter(s) of",
@@ -177,4 +177,4 @@ print(as.data.frame(va |> filter(year %in% c(1947,1948,1949,1970,1980,2000,2019,
   digits = 3, right = FALSE, row.names = FALSE)
 sink()
 
-cat(readLines(file.path(TABS, "t02_variants_summary.txt")), sep = "\n")
+cat(readLines(file.path(TABS_SEC, "t02_variants_summary.txt")), sep = "\n")

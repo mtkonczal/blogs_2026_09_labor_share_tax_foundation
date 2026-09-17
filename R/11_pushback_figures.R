@@ -16,7 +16,7 @@ qt <- qt |> mutate(v50 = 100 * (comp + 0.5 * prop) / ni)
 lastq <- paste0(format(max(qt$date), "%Y"), "Q", (as.integer(format(max(qt$date), "%m")) + 2) %/% 3)
 cap_src <- paste0("Source: BEA NIPA Table 1.10 (1.14 for the nonfinancial-corporate line). Quarterly, 1947Q1-", lastq, ".")
 
-sv <- function(p, f, w = 8, h = 5) ggsave(file.path(FIGS, f), p, width = w, height = h, dpi = 200)
+sv <- function(p, f, w = 8, h = 5) ggsave(file.path(FIGS_BLOG, f), p, width = w, height = h, dpi = 200)
 
 dmin <- min(qt$date); dmax <- max(qt$date)
 brks <- seq(as.Date("1950-01-01"), dmax, by = "10 years")
@@ -84,29 +84,25 @@ p11 <- ggplot(f11d, aes(date, value, colour = name)) +
   theme_ls() + theme(plot.margin = margin(6, 105, 6, 6))
 sv(p11, "f11_proprietor_0_50_100_quarterly.png", w = 8.5)
 
-# F12 - the two measures that show the "not without precedent" claim breaking -
-f12d <- qt |> select(date, `Total economy\n(50% of prop. income to labor)` = v50) |>
-  left_join(nf |> select(date, `Nonfinancial corporate\n(net of depreciation)` = value), by = "date") |>
-  pivot_longer(-date)
-lab12 <- f12d |> group_by(name) |> slice_max(date, n = 1) |>
-  ungroup() |> mutate(y_lab = value + c(1.3, -1.3)[match(name, unique(name))])
-ref12 <- f12d |> group_by(name) |> summarise(ref = mean(value[date <= as.Date("1949-12-01")]))
-p12 <- ggplot(f12d, aes(date, value, colour = name)) +
-  geom_hline(data = ref12, aes(yintercept = ref, colour = name), linetype = "22", linewidth = 0.4, show.legend = FALSE) +
-  geom_line(linewidth = 0.7) +
-  geom_text(data = lab12, aes(y = y_lab, label = sprintf("%s\n%.1f%%", name, value)),
-            hjust = 0, nudge_x = 400, size = 3.0, fontface = "bold", lineheight = 0.95) +
-  scale_colour_manual(values = c("Total economy\n(50% of prop. income to labor)" = "#1B4F72",
-                                 "Nonfinancial corporate\n(net of depreciation)" = "#B54708")) +
+# F12 - the nonfinancial corporate measure that shows the "not without precedent" claim breaking -
+f12d <- nf |> select(date, value)
+ref12 <- mean(f12d$value[f12d$date <= as.Date("1949-12-01")])
+lab12 <- f12d |> slice_max(date, n = 1)
+p12 <- ggplot(f12d, aes(date, value)) +
+  geom_hline(yintercept = ref12, linetype = "22", linewidth = 0.4, colour = "#B54708") +
+  geom_line(linewidth = 0.7, colour = "#B54708") +
+  geom_point(data = lab12, size = 1.8, colour = "#B54708") +
+  geom_text(data = lab12, aes(label = sprintf("%s: %.1f%%", lastq, value)),
+            hjust = 0, nudge_x = 400, size = 3.4, fontface = "bold", colour = "#B54708") +
   scale_y_continuous(labels = label_percent(scale = 1)) +
-  xr(0.22) +
+  xr(0.16) +
   coord_cartesian(clip = "off") +
-  labs(title = "Figure 3. The \"not without precedent\" measures, updated",
-       subtitle = wrp(paste0("Dotted lines mark each series' own 1947-49 average. Both sat at roughly that level through the ",
-                             "2010s -- the basis for the literature's \"net share is within its historical range\" finding ",
-                             "(Bridgman 2018; Rognlie 2015) -- and both are now below it, at the lowest reading in the series."), 88),
-       x = NULL, y = "Percent", caption = cap_src) +
-  theme_ls() + theme(legend.position = "none", plot.margin = margin(6, 105, 6, 6))
-sv(p12, "f12_not_without_precedent_quarterly.png", w = 9, h = 5.4)
+  labs(title = "Figure 3. The \"not without precedent\" measure, updated",
+       subtitle = wrp(paste0("Nonfinancial corporate net labor share (net of depreciation only). Dotted line marks its own ",
+                             "1947-49 average -- the basis for the literature's \"net share is within its historical range\" ",
+                             "finding (Bridgman 2018; Rognlie 2015) -- and it is now below it, at the lowest reading in the series."), 88),
+       x = NULL, y = "Percent of net value added", caption = cap_src) +
+  theme_ls() + theme(plot.margin = margin(6, 95, 6, 6))
+sv(p12, "f12_not_without_precedent_quarterly.png", w = 8.5, h = 5)
 
 cat("\nFigures written: f10_tf_share_quarterly.png, f11_proprietor_0_50_100_quarterly.png, f12_not_without_precedent_quarterly.png\n")

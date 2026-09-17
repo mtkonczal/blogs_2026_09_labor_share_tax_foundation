@@ -1,5 +1,5 @@
 Labor share under alternative conventions, all from NIPA
-Vintage: 2026-09-09 | latest annual point uses 2 quarter(s) of 2026 
+Vintage: 2026-09-16 | latest annual point uses 2 quarter(s) of 2026 
 
  measure                                        1947-49 1970s 2000s 2015-19
  V1 TF baseline: comp / net income              69.2    75.4  72.6  70.4   

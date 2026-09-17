@@ -1,5 +1,5 @@
 What is inside the Tax Foundation income universe
-BEA NIPA, vintage 2026-09-09 | latest quarter 2026Q2 
+BEA NIPA, vintage 2026-09-16 | latest quarter 2026Q2 
 
 Composition of their net-income denominator ($23.78 trillion SAAR):
  component                                 pct_of_TF_net_income labor_share

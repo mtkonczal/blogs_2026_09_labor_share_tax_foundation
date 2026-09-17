@@ -16,7 +16,18 @@ RAW     <- file.path(PROJ, "data", "raw")
 DERIVED <- file.path(PROJ, "data", "derived")
 FIGS    <- file.path(PROJ, "output", "figures")
 TABS    <- file.path(PROJ, "output", "tables")
-for (d in c(RAW, DERIVED, FIGS, TABS)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
+
+# Figures/tables split by which write-up consumes them: labor_share_pushback.md
+# ("blogpost") vs. docs/replication_and_literature.md, factcheck.qmd, and
+# measures_survey.qmd (all "secondary"). data/derived/ stays flat -- almost
+# every CSV there is a shared input across several scripts, so splitting it
+# would mean duplicating files rather than separating concerns.
+FIGS_BLOG <- file.path(FIGS, "blogpost")
+FIGS_SEC  <- file.path(FIGS, "secondary")
+TABS_BLOG <- file.path(TABS, "blogpost")
+TABS_SEC  <- file.path(TABS, "secondary")
+
+for (d in c(RAW, DERIVED, FIGS_BLOG, FIGS_SEC, TABS_BLOG, TABS_SEC)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 
 # Release-mode discipline: every derived file gets a vintage stamp.
 write_derived <- function(x, name) {

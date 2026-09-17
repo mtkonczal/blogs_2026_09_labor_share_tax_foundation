@@ -20,13 +20,13 @@ Where to start? I think five things.
 
 **First**, their data concedes my first two points above. Here’s their “unambiguous labor share” in Figure 1:
 
-![Figure 1. The Tax Foundation's own "unambiguous" labor share, every quarter since 1947](output/figures/f10_tf_share_quarterly.png)
+![Figure 1. The Tax Foundation's own "unambiguous" labor share, every quarter since 1947](output/figures/blogpost/f10_tf_share_quarterly.png)
 
 After being stable in the 1950s through 1990s, it fell, and fell again over the past six years. So we’re in agreement there. Should we call it a day? Well we’re already here. The open question is number 3 above, what to make of the idea about this “round trip.” So let’s keep going.
 
 **Second**, if you include proprietary income as labor income for their measure, then it becomes the lowest on record. Let’s stick with their measure, and add in some proprietary income as labor income. Their post is in a bind, because it wants to argue, following the latest evidence, that we should think of prop income as being mostly labor income, on the order of three-quarters ([Smith et al 2019](https://www.nber.org/papers/w25442)), to try and talk up the idea that there’s a lot of mismeasured and hidden labor income out there. Fair enough. But if you do that, given the higher share of prop income in the 1940s, it raises the labor share then. Here is their measure with 0%, 50%, and 100% of prop income as labor income (Figure 2):
 
-![Figure 2. Their measure with 0%, 50%, and 100% of proprietors' income counted as labor](output/figures/f11_proprietor_0_50_100_quarterly.png)
+![Figure 2. Their measure with 0%, 50%, and 100% of proprietors' income counted as labor](output/figures/blogpost/f11_proprietor_0_50_100_quarterly.png)
 
 For what it's worth, I have generally used 50% of prop income as labor income in my thinking, realizing I should probably update that higher. Adding any prop income to labor share raises the level of income today but it also raises it even more in the 1940s, since prop income was a much bigger share of the economy then. At 50% or at 100% to labor, the current quarter isn’t just low, it’s the single lowest reading in the entire 1947-2026 series.
 
@@ -36,7 +36,7 @@ Their round trip language invokes a staple of the labor share literature debates
 
 That was definitely true in 2015 and 2018. But is that true now? I want to use a labor share more consistent with the literature than what the Tax Foundation does.[Footnote: A funny thing about their definition is that the non-profit sector, because it generates no corporate profits, rental income, or proprietors’ income in the NIPAs, gets treated as having a 100% labor share. Truly, us non-profit workers are the vanguard of the working class!] The measure I watch most closely here is the net labor share of the nonfinancial corporate sector (so there’s no prop income to worry about), benchmarked against its own 1947-49 average (Figure 3):
 
-![Figure 3. The nonfinancial corporate net labor share against its own 1947-49 average](output/figures/f12_not_without_precedent_quarterly.png)
+![Figure 3. The nonfinancial corporate net labor share against its own 1947-49 average](output/figures/blogpost/f12_not_without_precedent_quarterly.png)
 
 As you can see here, during the 2010s, this hung out in roughly the 1940s level. So a round trip? But since COVID this has collapsed further, and fallen even more since Trump took office at the beginning of 2025. Something is different.
 
@@ -44,12 +44,12 @@ As you can see here, during the 2010s, this hung out in roughly the 1940s level.
 
 As you’ll see below, it’s very unstable during this period. Here’s their measure dating back to 1929 (Figure 4):
 
-![Figure 4. The unambiguous labor share, 1929-2025](output/figures/f08_annual_history_1929.png)
+![Figure 4. The unambiguous labor share, 1929-2025](output/figures/blogpost/f08_annual_history_1929.png)
 
 It itself is making many round trips! The topsy-turvy nature of this is why Robert Solow argued, using this data from 1929 to 1954, that he was “skeptical” about any consistency in the labor share that many assumed ([Solow 1958](https://www.jstor.org/stable/1808271)). So I’m not convinced that there’s a “starting level” at all.
 
 **Fifth**, building on that, labor share actually mirrors 1% inequality this way. Using the annual data again, take the capital share of net income and put it up against Piketty and Saez’s top 1% share (from the [World Inequality Database](https://wid.world/country/usa/) through 2024), and take a look (Figure 5):
 
-![Figure 5. The capital share and top-1% income concentration move together](output/figures/f09_top1_vs_capital.png)
+![Figure 5. The capital share and top-1% income concentration move together](output/figures/blogpost/f09_top1_vs_capital.png)
 
 It’s the same story? Different decades along the way, but it certainly comes back over the full 1929-2024 overlap. I think we have a story that 1% inequality has largely been a choice we’ve made, though obviously many people argue it’s strictly a matter of supply and demand. We certainly don’t, in the back of our heads, think that the 1% share is fixed deep in the economy. Perhaps it’s time we think the same thing with the capital share.

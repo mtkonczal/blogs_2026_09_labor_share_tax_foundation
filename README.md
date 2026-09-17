@@ -31,17 +31,22 @@ Requires R with `tidyverse` and [`tidyusmacro`](https://github.com/mtkonczal/tid
 
 | File | Contents |
 |---|---|
-| `output/tables/t01_replication_validation.txt` | Every Tax Foundation figure, claimed vs replicated, plus accounting-identity checks |
-| `output/tables/t02_variants_summary.txt` | Labor share under nine conventions, by era, with 79-year ranks |
-| `output/tables/t03_sector_decomposition.txt` | Within- vs between-sector shift-share |
-| `output/tables/t04_universe.txt` | Composition of their income universe vs corporate and nonfinancial corporate |
-| `output/figures/f01_tf_replication.png` | The three-way split of net income, 1947-2026 |
-| `output/figures/f02_net_vs_gross.png` | Net vs gross labor share |
-| `output/figures/f03_proprietor_bounds.png` | Labor share under three allocations of proprietors' income |
-| `output/figures/f03b_proprietor_bounds_1960.png` | Same, 1960 onward, compensation only vs 50/50 split |
-| `output/figures/f04_corporate_sector.png` | Corporate-sector labor share, three conventions |
-| `output/figures/f05_shift_share.png` | Decomposition of the 1947-49 to 2026 change |
-| `output/figures/f06_capital_ex_housing.png` | Capital share with and without rental income of persons |
+| `output/tables/secondary/t01_replication_validation.txt` | Every Tax Foundation figure, claimed vs replicated, plus accounting-identity checks |
+| `output/tables/secondary/t02_variants_summary.txt` | Labor share under nine conventions, by era, with 79-year ranks |
+| `output/tables/secondary/t03_sector_decomposition.txt` | Within- vs between-sector shift-share |
+| `output/tables/secondary/t04_universe.txt` | Composition of their income universe vs corporate and nonfinancial corporate |
+| `output/figures/secondary/f01_tf_replication.png` | The three-way split of net income, 1947-2026 |
+| `output/figures/secondary/f02_net_vs_gross.png` | Net vs gross labor share |
+| `output/figures/secondary/f03_proprietor_bounds.png` | Labor share under three allocations of proprietors' income |
+| `output/figures/secondary/f03b_proprietor_bounds_1960.png` | Same, 1960 onward, compensation only vs 50/50 split |
+| `output/figures/secondary/f04_corporate_sector.png` | Corporate-sector labor share, three conventions |
+| `output/figures/secondary/f05_shift_share.png` | Decomposition of the 1947-49 to 2026 change |
+| `output/figures/secondary/f06_capital_ex_housing.png` | Capital share with and without rental income of persons |
+
+`output/figures/` and `output/tables/` are split into `blogpost/` (labor_share_pushback.md,
+built by `R/07_annual_history.R`, `08_top1_comparison.R`, `11_pushback_figures.R`) and
+`secondary/` (this replication write-up and `docs/factcheck.qmd`/`measures_survey.qmd`,
+built by `01`-`06` and `10`, listed above).
 
 Derived CSVs land in `data/derived/`, each with a `.vintage.txt` stamp recording the pull
 timestamp. NIPA data are revised; re-running `01_download_nipa.R` changes the numbers.

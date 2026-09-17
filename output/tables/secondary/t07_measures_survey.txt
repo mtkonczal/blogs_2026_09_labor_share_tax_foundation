@@ -1,5 +1,5 @@
 Labor-share and corporate-profit measures survey, quarterly, 1947Q1-latest
-Vintage: 2026-09-10 
+Vintage: 2026-09-16 
 
 --- Labor share ---
  name                                                          

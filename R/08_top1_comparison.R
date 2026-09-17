@@ -51,7 +51,7 @@ cat(sprintf("  year-over-year changes: r = %.2f\n", r_change))
 
 write_derived(d, "top1_vs_capital_annual")
 
-sink(file.path(TABS, "t06_top1_vs_capital.txt"))
+sink(file.path(TABS_BLOG, "t06_top1_vs_capital.txt"))
 cat("Capital share of net income (TF convention) vs. WID top-1% pretax national income share\n")
 cat("Vintage:", format(Sys.time(), "%Y-%m-%d"), "\n\n")
 cat(sprintf("Overlap: %d-%d (%d years). Correlation of levels: r = %.2f. Of annual changes: r = %.2f.\n\n",
@@ -65,7 +65,7 @@ cat(sprintf("\nWID's most recent %d year(s) for the US (%s) repeat the prior obs
 cat("WID nowcasts, not realized tax-return data; treat as provisional, as this project does\n")
 cat("with its own partial-year 2026 observation elsewhere.\n")
 sink()
-cat(readLines(file.path(TABS, "t06_top1_vs_capital.txt")), sep = "\n")
+cat(readLines(file.path(TABS_BLOG, "t06_top1_vs_capital.txt")), sep = "\n")
 
 # Figure: two stacked panels sharing an x-axis, not a dual-axis overlay -- a
 # single scaled overlay lets you pick axis ranges to manufacture visual
@@ -108,5 +108,5 @@ p8 <- ggplot(d8, aes(year, value, colour = name)) +
        caption = wrp(paste0("Source: BEA NIPA Table 1.10 (annual register); World Inequality Database, ",
                             "sptinc992j, p99p100, USA, via Our World in Data. Author's calculations."), 100)) +
   theme_ls() + theme(plot.margin = margin(6, 70, 6, 6))
-ggsave(file.path(FIGS, "f09_top1_vs_capital.png"), p8, width = 9, height = 5.3, dpi = 200)
+ggsave(file.path(FIGS_BLOG, "f09_top1_vs_capital.png"), p8, width = 9, height = 5.3, dpi = 200)
 cat("\nFigure written: f09_top1_vs_capital.png\n")

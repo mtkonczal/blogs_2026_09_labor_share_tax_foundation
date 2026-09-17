@@ -42,7 +42,7 @@ stated in the post:
 
 ## 2. The replication is exact
 
-`output/tables/t01_replication_validation.txt`. Every figure reproduces at the precision
+`output/tables/secondary/t01_replication_validation.txt`. Every figure reproduces at the precision
 the post reports, including all the historical claims:
 
 | Claim | Post | Replicated |

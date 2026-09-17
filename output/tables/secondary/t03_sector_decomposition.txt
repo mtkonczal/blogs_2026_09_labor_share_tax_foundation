@@ -1,5 +1,5 @@
 Shift-share of the Tax Foundation net labor share, percentage points
-Vintage: 2026-09-09 
+Vintage: 2026-09-16 
 
 Sector labor shares and net-income weights, selected years:
  year L    l_corp l_gov l_oth w_corp w_gov w_oth
