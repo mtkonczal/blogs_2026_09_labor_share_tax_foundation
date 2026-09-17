@@ -29,12 +29,9 @@ wrp  <- function(x, n = 95) paste(strwrap(x, width = n), collapse = "\n")
 era <- function(x, d, lo, hi) mean(x[d >= as.Date(lo) & d <= as.Date(hi)])
 rank_low <- function(x) sum(x <= dplyr::last(x))
 
-# Bridgman (2018) nets out both depreciation and production taxes from the
-# denominator (his own words: "items that do not add to capital, depreciation
-# and production taxes, are netted out"), so l_nfcorp_net_extax -- comp / (comp
-# + net operating surplus) -- matches his convention more closely than the
-# net-of-depreciation-only l_nfcorp_net_std.
-nf <- ms |> filter(id == "l_nfcorp_net_extax") |> arrange(date)
+# Net of depreciation only, not production taxes: comp / net value added
+# (NIPA Table 1.14), the standard net-value-added convention.
+nf <- ms |> filter(id == "l_nfcorp_net_std") |> arrange(date)
 
 cat("=== Stats for labor_share_pushback.md ===\n")
 cat(sprintf("TF net labor share (0%% prop): 1950-99 quarterly avg %.1f, 2000-%s avg %.1f, latest %.1f, rank %d of %d\n",
@@ -61,7 +58,7 @@ p10 <- ggplot(f10d, aes(date, lab_net)) +
   scale_y_continuous(labels = label_percent(scale = 1)) +
   xr(0.14) +
   coord_cartesian(clip = "off") +
-  labs(title = "The Tax Foundation's own \"unambiguous\" labor share",
+  labs(title = "Figure 1. The Tax Foundation's own \"unambiguous\" labor share",
        subtitle = wrp("Compensation of employees as a share of net income, their exact convention, every quarter since 1947"),
        x = NULL, y = "Percent of net income", caption = cap_src) +
   theme_ls() + theme(plot.margin = margin(6, 95, 6, 6))
@@ -81,7 +78,7 @@ p11 <- ggplot(f11d, aes(date, value, colour = name)) +
   scale_y_continuous(labels = label_percent(scale = 1)) +
   xr(0.20) +
   coord_cartesian(clip = "off") +
-  labs(title = "Their measure with 0%, 50%, and 100% of proprietors' income as labor income",
+  labs(title = "Figure 2. Their measure with 0%, 50%, and 100% of proprietors' income as labor income",
        subtitle = wrp("Same net-income denominator throughout; only how proprietors' income is split between labor and capital changes"),
        x = NULL, y = "Percent of net income", caption = cap_src) +
   theme_ls() + theme(plot.margin = margin(6, 105, 6, 6))
@@ -89,7 +86,7 @@ sv(p11, "f11_proprietor_0_50_100_quarterly.png", w = 8.5)
 
 # F12 - the two measures that show the "not without precedent" claim breaking -
 f12d <- qt |> select(date, `Total economy\n(50% of prop. income to labor)` = v50) |>
-  left_join(nf |> select(date, `Nonfinancial corporate\n(net of production taxes)` = value), by = "date") |>
+  left_join(nf |> select(date, `Nonfinancial corporate\n(net of depreciation)` = value), by = "date") |>
   pivot_longer(-date)
 lab12 <- f12d |> group_by(name) |> slice_max(date, n = 1) |>
   ungroup() |> mutate(y_lab = value + c(1.3, -1.3)[match(name, unique(name))])
@@ -100,11 +97,11 @@ p12 <- ggplot(f12d, aes(date, value, colour = name)) +
   geom_text(data = lab12, aes(y = y_lab, label = sprintf("%s\n%.1f%%", name, value)),
             hjust = 0, nudge_x = 400, size = 3.0, fontface = "bold", lineheight = 0.95) +
   scale_colour_manual(values = c("Total economy\n(50% of prop. income to labor)" = "#1B4F72",
-                                 "Nonfinancial corporate\n(net of production taxes)" = "#B54708")) +
+                                 "Nonfinancial corporate\n(net of depreciation)" = "#B54708")) +
   scale_y_continuous(labels = label_percent(scale = 1)) +
   xr(0.22) +
   coord_cartesian(clip = "off") +
-  labs(title = "The \"not without precedent\" measures, updated",
+  labs(title = "Figure 3. The \"not without precedent\" measures, updated",
        subtitle = wrp(paste0("Dotted lines mark each series' own 1947-49 average. Both sat at roughly that level through the ",
                              "2010s -- the basis for the literature's \"net share is within its historical range\" finding ",
                              "(Bridgman 2018; Rognlie 2015) -- and both are now below it, at the lowest reading in the series."), 88),

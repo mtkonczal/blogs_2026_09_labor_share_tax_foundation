@@ -1,5 +1,5 @@
 Annual-native NIPA Table 1.10 series, 1929-2025, vs. the quarterly-built series
-Vintage: 2026-09-09 
+Vintage: 2026-09-16 
 
 Max abs diff in lab_net over 1947-2025 overlap (native annual vs mean-of-quarters): 0.0016 pp
 (Confirms the annual register construction reproduces 02_replicate_tf.R exactly;

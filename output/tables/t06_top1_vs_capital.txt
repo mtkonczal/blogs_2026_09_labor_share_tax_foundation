@@ -1,5 +1,5 @@
 Capital share of net income (TF convention) vs. WID top-1% pretax national income share
-Vintage: 2026-09-10 
+Vintage: 2026-09-16 
 
 Overlap: 1929-2024 (96 years). Correlation of levels: r = 0.49. Of annual changes: r = 0.41.
 

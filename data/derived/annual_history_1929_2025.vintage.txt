@@ -1,3 +1,3 @@
-vintage: 2026-09-09 13:15:45 EDT
+vintage: 2026-09-16 21:08:00 EDT
 rows: 97
 nipa_source: https://apps.bea.gov/national/Release/TXT/

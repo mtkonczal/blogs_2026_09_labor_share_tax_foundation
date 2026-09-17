@@ -99,7 +99,7 @@ p8 <- ggplot(d8, aes(year, value, colour = name)) +
   scale_x_continuous(breaks = seq(1930, 2020, 10), limits = c(1929, max(d8$year) + 16),
                      expand = expansion(0)) +
   coord_cartesian(clip = "off") +
-  labs(title = "The capital share and top-1% income concentration move together",
+  labs(title = "Figure 5. The capital share and top-1% income concentration move together",
        subtitle = wrp(sprintf(paste0("Annual, 1929-%d. Correlation of levels r = %.2f; of year-over-year changes ",
                                      "r = %.2f. Dashed line marks WID's nowcast years for the US (%s), which ",
                                      "repeat the last observed value rather than realized tax data."),

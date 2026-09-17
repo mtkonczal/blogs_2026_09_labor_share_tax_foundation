@@ -174,7 +174,7 @@ p8 <- ggplot(f8d, aes(year, lab_net)) +
            label = sprintf("2025: %.1f%%", now_val)) +
   scale_y_continuous(labels = label_percent(scale = 1), breaks = seq(60, 80, 5)) +
   scale_x_continuous(breaks = seq(1930, 2020, 10)) +
-  labs(title = "The unambiguous labor share, 1929-2025",
+  labs(title = "Figure 4. The unambiguous labor share, 1929-2025",
        subtitle = wrp(paste0("Compensation of employees as a share of net income (comp + proprietors' income + ",
                        "unambiguous capital income). Pre-1947 uses BEA's annual NIPA register, which carries ",
                        "Table 1.10 back to 1929; 1947 on matches the quarterly-built series exactly.")),
