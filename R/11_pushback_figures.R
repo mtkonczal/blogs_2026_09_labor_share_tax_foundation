@@ -18,6 +18,17 @@ cap_src <- paste0("Source: BEA NIPA Table 1.10 (1.14 for the nonfinancial-corpor
 
 sv <- function(p, f, w = 8, h = 5) ggsave(file.path(FIGS_BLOG, f), p, width = w, height = h, dpi = 200)
 
+# Datawrapper CSV per figure, same convention as 09_datawrapper_export.R (one
+# tidy wide file per chart, numbers rounded to 3dp), just written alongside
+# the figures they match instead of duplicating their construction there.
+DW_BLOG <- file.path(PROJ, "output", "datawrapper", "blogpost")
+dir.create(DW_BLOG, recursive = TRUE, showWarnings = FALSE)
+dw <- function(x, name) {
+  x <- x |> mutate(across(where(is.double), \(v) round(v, 3)))
+  write_csv(x, file.path(DW_BLOG, paste0(name, ".csv")))
+  invisible(x)
+}
+
 dmin <- min(qt$date); dmax <- max(qt$date)
 brks <- seq(as.Date("1950-01-01"), dmax, by = "10 years")
 xr   <- function(frac) scale_x_date(limits = c(dmin, dmax + frac * as.numeric(dmax - dmin)),
@@ -47,7 +58,7 @@ cat(sprintf("Nonfinancial corporate, net: 1947-49 avg %.1f, 2010s avg %.1f, late
             era(nf$value, nf$date, "1947-01-01", "1949-12-01"), era(nf$value, nf$date, "2010-01-01", "2019-12-01"),
             dplyr::last(nf$value), format(nf$date[which.min(nf$value)])))
 
-# F10 - the Tax Foundation's own measure, full quarterly arc ------------------
+# Figure 1 - the Tax Foundation's own measure, full quarterly arc ------------------
 f10d <- qt |> select(date, lab_net)
 lab10 <- f10d |> slice_max(date, n = 1)
 p10 <- ggplot(f10d, aes(date, lab_net)) +
@@ -59,15 +70,18 @@ p10 <- ggplot(f10d, aes(date, lab_net)) +
   xr(0.14) +
   coord_cartesian(clip = "off") +
   labs(title = "Figure 1. The Tax Foundation's own \"unambiguous\" labor share",
-       subtitle = wrp("Compensation of employees as a share of net income, their exact convention, every quarter since 1947"),
+       subtitle = wrp("Compensation of employees as a share of net income (gross domestic income less depreciation and taxes), their exact convention, every quarter since 1947"),
        x = NULL, y = "Percent of net income", caption = cap_src) +
   theme_ls() + theme(plot.margin = margin(6, 95, 6, 6))
-sv(p10, "f10_tf_share_quarterly.png", w = 8.5)
+sv(p10, "figure1_tf_share_quarterly.png", w = 8.5)
+f10d |> transmute(date, `Labor share of net income (TF convention)` = lab_net) |>
+  dw("figure1_tf_share_quarterly")
 
-# F11 - 0% / 50% / 100% of proprietors' income to labor -----------------------
-f11d <- qt |> transmute(date, `0% (their measure)` = lab_net, `50%` = v50) |>
-  left_join(qv |> transmute(date, `100%` = v2_labmax), by = "date") |>
-  pivot_longer(-date)
+# Figure 2 - 0% / 50% / 100% of proprietors' income to labor -----------------------
+f11w <- qt |> transmute(date, `0% (their measure)` = lab_net, `50%` = v50) |>
+  left_join(qv |> transmute(date, `100%` = v2_labmax), by = "date")
+dw(f11w, "figure2_proprietor_0_50_100_quarterly")
+f11d <- f11w |> pivot_longer(-date)
 f11d$name <- factor(f11d$name, levels = c("0% (their measure)", "50%", "100%"))
 lab11 <- f11d |> group_by(name) |> slice_max(date, n = 1)
 p11 <- ggplot(f11d, aes(date, value, colour = name)) +
@@ -82,9 +96,9 @@ p11 <- ggplot(f11d, aes(date, value, colour = name)) +
        subtitle = wrp("Same net-income denominator throughout; only how proprietors' income is split between labor and capital changes"),
        x = NULL, y = "Percent of net income", caption = cap_src) +
   theme_ls() + theme(plot.margin = margin(6, 105, 6, 6))
-sv(p11, "f11_proprietor_0_50_100_quarterly.png", w = 8.5)
+sv(p11, "figure2_proprietor_0_50_100_quarterly.png", w = 8.5)
 
-# F12 - the nonfinancial corporate measure that shows the "not without precedent" claim breaking -
+# Figure 3 - the nonfinancial corporate measure that shows the "not without precedent" claim breaking -
 f12d <- nf |> select(date, value)
 ref12 <- mean(f12d$value[f12d$date <= as.Date("1949-12-01")])
 lab12 <- f12d |> slice_max(date, n = 1)
@@ -103,6 +117,11 @@ p12 <- ggplot(f12d, aes(date, value)) +
                              "finding (Bridgman 2018; Rognlie 2015) -- and it is now below it, at the lowest reading in the series."), 88),
        x = NULL, y = "Percent of net value added", caption = cap_src) +
   theme_ls() + theme(plot.margin = margin(6, 95, 6, 6))
-sv(p12, "f12_not_without_precedent_quarterly.png", w = 8.5, h = 5)
+sv(p12, "figure3_not_without_precedent_quarterly.png", w = 8.5, h = 5)
+f12d |> transmute(date,
+                   `Nonfinancial corporate net labor share (net of depreciation)` = value,
+                   `1947-49 average` = ref12) |>
+  dw("figure3_not_without_precedent_quarterly")
 
-cat("\nFigures written: f10_tf_share_quarterly.png, f11_proprietor_0_50_100_quarterly.png, f12_not_without_precedent_quarterly.png\n")
+cat("\nFigures written: figure1_tf_share_quarterly.png, figure2_proprietor_0_50_100_quarterly.png, figure3_not_without_precedent_quarterly.png\n")
+cat("Datawrapper CSVs written to", DW_BLOG, ":", list.files(DW_BLOG), "\n")

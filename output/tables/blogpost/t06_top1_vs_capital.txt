@@ -1,20 +1,16 @@
-Capital share of net income (TF convention) vs. WID top-1% pretax national income share
-Vintage: 2026-09-16 
+Capital share of net income (TF convention) vs. Piketty-Saez top-1% wage-income share
+Vintage: 2026-09-17 
 
-Overlap: 1929-2024 (96 years). Correlation of levels: r = 0.49. Of annual changes: r = 0.41.
+Wage-income series covers 1927-2011 (Table B2, TabFig2024.xlsx); capital share runs 1929-2025.
+Overlap 1929-2011 (77 years). Correlation of levels: r = 0.61. Of annual changes: r = 0.05.
 
 Selected years:
- year cap_net top1 
- 1929 23.28   22.18
- 1944 12.14   15.35
- 1970 13.89   10.70
- 1980 15.50   10.42
- 2000 16.65   17.34
- 2007 18.10   18.38
- 2010 20.19   17.89
- 2019 19.96   19.04
- 2024 21.37   20.73
-
-WID's most recent 2 year(s) for the US (2023, 2024) repeat the prior observation and are
-WID nowcasts, not realized tax-return data; treat as provisional, as this project does
-with its own partial-year 2026 observation elsewhere.
+ year cap_net top1_wage
+ 1929 23.28    8.671   
+ 1944 12.14    5.564   
+ 1970 13.89    5.133   
+ 1980 15.50    6.425   
+ 2000 16.65   12.260   
+ 2007 18.10   12.200   
+ 2010 20.19   10.915   
+ 2011 20.10   11.026   

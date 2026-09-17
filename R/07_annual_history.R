@@ -181,7 +181,7 @@ p8 <- ggplot(f8d, aes(year, lab_net)) +
        x = NULL, y = "Percent of net income",
        caption = "Source: BEA NIPA Table 1.10, annual register (1929-2025). Author's calculations.") +
   theme_ls()
-ggsave(file.path(FIGS_BLOG, "f08_annual_history_1929.png"), p8, width = 8.5, height = 5.2, dpi = 200)
+ggsave(file.path(FIGS_BLOG, "figure4_annual_history_1929.png"), p8, width = 8.5, height = 5.2, dpi = 200)
 
-cat("\nFigure written: f08_annual_history_1929.png\n")
+cat("\nFigure written: figure4_annual_history_1929.png\n")
 

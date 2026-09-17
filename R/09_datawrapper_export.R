@@ -6,8 +6,12 @@
 
 source("R/00_setup.R")
 
-DW <- file.path(PROJ, "output", "datawrapper")
-dir.create(DW, recursive = TRUE, showWarnings = FALSE)
+# Split the same way as output/figures/ and output/tables/: "blogpost" (F8-F9,
+# which feed labor_share_pushback.md) vs. "secondary" (F1-F7, which feed
+# docs/replication_and_literature.md and docs/factcheck.qmd).
+DW_BLOG <- file.path(PROJ, "output", "datawrapper", "blogpost")
+DW_SEC  <- file.path(PROJ, "output", "datawrapper", "secondary")
+for (d in c(DW_BLOG, DW_SEC)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 
 qt <- read_csv(file.path(DERIVED, "tf_shares_quarterly.csv"), show_col_types = FALSE)
 qa <- read_csv(file.path(DERIVED, "tf_shares_annual.csv"),   show_col_types = FALSE)
@@ -16,9 +20,9 @@ sd <- read_csv(file.path(DERIVED, "sector_decomposition_annual.csv"), show_col_t
 h  <- read_csv(file.path(DERIVED, "annual_history_1929_2025.csv"), show_col_types = FALSE)
 t1 <- read_csv(file.path(DERIVED, "top1_vs_capital_annual.csv"), show_col_types = FALSE)
 
-dw <- function(x, name) {
+dw <- function(x, name, dir = DW_SEC) {
   x <- x |> mutate(across(where(is.double), \(v) round(v, 3)))
-  write_csv(x, file.path(DW, paste0(name, ".csv")))
+  write_csv(x, file.path(dir, paste0(name, ".csv")))
   invisible(x)
 }
 
@@ -88,12 +92,14 @@ qa |> filter(year < max(year)) |>
 
 # F8 - the unambiguous labor share, 1929-2025 ----------------------------------
 h |> transmute(year, `Unambiguous labor share` = lab_net) |>
-  dw("f08_annual_history_1929")
+  dw("figure4_annual_history_1929", dir = DW_BLOG)
 
-# F9 - capital share vs. top 1% ------------------------------------------------
+# F9 - capital share vs. top 1% wage-income share (Piketty-Saez Table B2, ends 2011) --
 t1 |> transmute(year,
                 `Capital share of net income (TF convention)` = cap_net,
-                `Top 1% share of pretax national income (WID)` = top1) |>
-  dw("f09_top1_vs_capital")
+                `Top 1% share of wage income (Piketty-Saez, through 2011)` = top1_wage) |>
+  dw("figure5_top1_vs_capital", dir = DW_BLOG)
 
-cat("Datawrapper CSVs written to", DW, "\n"); print(list.files(DW))
+cat("Datawrapper CSVs written to", DW_BLOG, "and", DW_SEC, "\n")
+cat("blogpost:", list.files(DW_BLOG), "\n")
+cat("secondary:", list.files(DW_SEC), "\n")
